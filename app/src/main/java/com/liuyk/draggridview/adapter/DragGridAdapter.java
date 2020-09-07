@@ -25,10 +25,12 @@ public class DragGridAdapter extends AppBaseAdapter<Channel> {
     @Override
     protected void bindViewHolder(int position, ViewHolder viewHolder, View convertView, ViewGroup parent) {
         if (position == 0) {
+            ((DragViewHolder) viewHolder).channelName.setText(getItem(position).getChannelName());
             ((DragViewHolder) viewHolder).channelName.setTextColor(Color.parseColor("#ffffff"));
             ((DragViewHolder) viewHolder).channelName.setBackgroundResource(R.drawable.subscription_immutable_item_background);
         } else {
             ((DragViewHolder) viewHolder).channelName.setBackgroundColor(Color.parseColor("#ffffff"));
+            ((DragViewHolder) viewHolder).channelName.setTextColor(Color.parseColor("#000000"));
             ((DragViewHolder) viewHolder).channelName.setText(getItem(position).getChannelName());
         }
     }
