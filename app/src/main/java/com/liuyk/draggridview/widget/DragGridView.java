@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,11 +14,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import com.liuyk.draggridview.utility.DeviceUtils;
 
 /**
  * 可拖拽的GridView
  * <p/>
+ *
  * @author liuyk
  */
 public class DragGridView extends GridView {
@@ -134,7 +136,7 @@ public class DragGridView extends GridView {
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent ev) {
 
-        if(!mDragEnabled){//切切要在这里做拦截，否则会导致onItemClick()不可用
+        if (!mDragEnabled) {//切切要在这里做拦截，否则会导致onItemClick()不可用
             return super.onTouchEvent(ev);
         }
         switch (ev.getAction()) {

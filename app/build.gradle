@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion 28
+    
     defaultConfig {
         applicationId "com.liuyk.draggridview.draggridview"
-        minSdkVersion 9
-        targetSdkVersion 25
+        minSdkVersion 16
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -20,11 +20,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta3'
-    testCompile 'junit:junit:4.12'
+    api 'androidx.appcompat:appcompat:1.2.0'
+    api 'com.google.android.material:material:1.2.0'
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'androidx.recyclerview:recyclerview:1.1.0'
+    api 'androidx.constraintlayout:constraintlayout:2.0.1'
+    api 'androidx.annotation:annotation:1.1.0'
 }
