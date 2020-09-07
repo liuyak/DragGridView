@@ -15,9 +15,9 @@ import com.liuyk.draggridview.model.Channel;
  * <p>
  * @author liuyk
  */
-public class DragAdapter extends AppBaseAdapter<Channel> {
+public class DragGridAdapter extends AppBaseAdapter<Channel> {
 
-    public DragAdapter(Context context) {
+    public DragGridAdapter(Context context) {
         super(context);
     }
 
