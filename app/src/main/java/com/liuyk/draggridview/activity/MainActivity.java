@@ -12,15 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.liuyk.draggridview.adapter.DragGridAdapter;
 import com.liuyk.draggridview.model.Channel;
-import com.liuyk.draggridview.widget.DragGridView;
+import com.liuyk.draggridview.widget.MyGridView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class MainActivity extends AppCompatActivity implements DragGridView.OnPositionChangerListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
 
     private Vibrator mVibrator;
-    private DragGridView mDragGridView;
+    private MyGridView mDragGridView;
     private ArrayList<Channel> mChannels;
     private DragGridAdapter mAdapter;
 
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements DragGridView.OnPo
 
     private void initView() {
         findViewById(R.id.sure).setOnClickListener(this);
-        mDragGridView = (DragGridView) findViewById(R.id.drag_grid);
+        mDragGridView = findViewById(R.id.drag_grid);
         mAdapter = new DragGridAdapter(this);
         mChannels = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
@@ -45,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements DragGridView.OnPo
         }
         mAdapter.setItems(mChannels);
         mDragGridView.setAdapter(mAdapter);
-        mDragGridView.setOnPositionChangerListener(this);
         mDragGridView.setOnItemClickListener(this);
         mDragGridView.setOnItemLongClickListener(this);
+        mDragGridView.setItems(mChannels);
     }
 
     private void unedited() {
@@ -56,24 +55,6 @@ public class MainActivity extends AppCompatActivity implements DragGridView.OnPo
 
     private void editing() {
         mDragGridView.setDragEnabled(true);
-    }
-
-    @Override
-    public void onChange(int fromPosition, int toPosition) {
-        if (fromPosition < 0 || toPosition < 0 || fromPosition >= mChannels.size() || toPosition >= mChannels.size()) {
-            return;
-        }
-        if (fromPosition > toPosition) {
-            for (int i = toPosition; i < fromPosition; i++) {
-                Collections.swap(mChannels, fromPosition, i);
-
-            }
-        } else if (fromPosition < toPosition) {
-            for (int i = toPosition; i > fromPosition; i--) {
-                Collections.swap(mChannels, fromPosition, i);
-            }
-        }
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override

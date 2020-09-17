@@ -16,7 +16,7 @@
         android:textColor="#fff"
         android:textSize="18sp" />
 
-    <com.liuyk.draggridview.widget.DragGridView
+    <com.liuyk.draggridview.widget.MyGridView
         android:id="@+id/drag_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

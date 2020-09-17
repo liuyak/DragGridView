@@ -1,4 +1,4 @@
-package com.liuyk.draggridview.widget;
+package com.drag.draglibrary;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,20 +11,23 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 
-import com.liuyk.draggridview.utility.DeviceUtils;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 可拖拽的GridView
- * <p/>
- *
- * @author liuyk
  */
-public class DragGridView extends GridView {
+public abstract class BaseDragGridView<T> extends GridView {
+    private List<T> mItems;
+    private BaseAdapter mAdapter;
+
     private OnPositionChangerListener mOnPositionChangerListener;
 
     private Handler mHandler = new Handler();
@@ -85,15 +88,15 @@ public class DragGridView extends GridView {
      */
     private int mImmutablePosition = 0;
 
-    public DragGridView(Context context) {
+    public BaseDragGridView(Context context) {
         this(context, null);
     }
 
-    public DragGridView(Context context, AttributeSet attrs) {
+    public BaseDragGridView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DragGridView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BaseDragGridView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -142,14 +145,14 @@ public class DragGridView extends GridView {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 return super.onTouchEvent(ev);
-            case MotionEvent.ACTION_MOVE:
 
+            case MotionEvent.ACTION_MOVE:
                 Log.i("value", "Touch: move");
                 if (mDragEnabled && mDragImageView != null) {
                     onMoveDrag((int) ev.getRawX(), (int) ev.getRawY());
                     int moveX = (int) ev.getX();
                     int moveY = (int) ev.getY();
-                    swapItem(moveX, moveY);
+                    swapItemView(moveX, moveY);
                 }
 
                 break;
@@ -214,16 +217,19 @@ public class DragGridView extends GridView {
         }
     }
 
-    private void swapItem(int toPositionX, int toPositionY) {
+    private void swapItemView(int toPositionX, int toPositionY) {
         int toItemPosition = pointToPosition(toPositionX, toPositionY);
         final View toItemView = getChildAt(toItemPosition - getFirstVisiblePosition());
 
         if (toItemPosition == mDownItemPosition || toItemPosition == AdapterView.INVALID_POSITION ||
-                toItemView == null || mDownView == null || mOnPositionChangerListener == null ||
+                toItemView == null || mDownView == null ||
                 toItemPosition == mImmutablePosition) {
             return;
         }
-        mOnPositionChangerListener.onChange(mDownItemPosition, toItemPosition);
+        if (mOnPositionChangerListener != null) {
+            mOnPositionChangerListener.onChange(mDownItemPosition, toItemPosition);
+        }
+        swapItems(mDownItemPosition, toItemPosition);
         for (int i = 0; i < getChildCount(); i++) {
             getChildAt(i).setVisibility(View.VISIBLE);
         }
@@ -239,7 +245,10 @@ public class DragGridView extends GridView {
 
         //交换位置
         if (mDownView != null && toItemView != null) {
-            mOnPositionChangerListener.onChange(mDownItemPosition, toItemPosition);
+            if (mOnPositionChangerListener != null) {
+                mOnPositionChangerListener.onChange(mDownItemPosition, toItemPosition);
+            }
+            swapItems(mDownItemPosition, toItemPosition);
         }
         //如果toItemView为null,也要把所有的child显示,否则会出现child丢失的现象
         for (int i = 0; i < getChildCount(); i++) {
@@ -297,6 +306,36 @@ public class DragGridView extends GridView {
      */
     public void setImmutablePosition(int position) {
         mImmutablePosition = position;
+    }
+
+    public void setItems(List<T> mItems) {
+        this.mItems = mItems;
+    }
+
+    private void swapItems(int fromPosition, int toPosition) {
+        if (mItems == null || mItems.isEmpty()) {
+            return;
+        }
+        if (fromPosition < 0 || toPosition < 0 || fromPosition >= mItems.size() || toPosition >= mItems.size()) {
+            return;
+        }
+        if (fromPosition > toPosition) {
+            for (int i = toPosition; i < fromPosition; i++) {
+                Collections.swap(mItems, fromPosition, i);
+
+            }
+        } else if (fromPosition < toPosition) {
+            for (int i = toPosition; i > fromPosition; i--) {
+                Collections.swap(mItems, fromPosition, i);
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setAdapter(ListAdapter adapter) {
+        super.setAdapter(adapter);
+        mAdapter = (BaseAdapter) adapter;
     }
 
     public void setOnPositionChangerListener(OnPositionChangerListener onPositionChangerListener) {
