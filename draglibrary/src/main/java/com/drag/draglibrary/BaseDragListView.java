@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import androidx.annotation.NonNull;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -103,7 +101,7 @@ public abstract class BaseDragListView<T> extends ListView {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(@NonNull MotionEvent ev) {
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.i("value", "Intercept: down");
@@ -137,7 +135,7 @@ public abstract class BaseDragListView<T> extends ListView {
     }
 
     @Override
-    public boolean onTouchEvent(@NonNull MotionEvent ev) {
+    public boolean onTouchEvent(MotionEvent ev) {
 
         if (!mDragEnabled) {//切切要在这里做拦截，否则会导致onItemClick()不可用
             return super.onTouchEvent(ev);
