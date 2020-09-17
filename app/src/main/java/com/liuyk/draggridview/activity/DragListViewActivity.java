@@ -10,18 +10,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.liuyk.draggridview.adapter.DragListAdapter;
 import com.liuyk.draggridview.model.Channel;
-import com.liuyk.draggridview.widget.DragListView;
+import com.liuyk.draggridview.widget.MyListView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * DESC
  * <p>
  * Created by liuyakui on 2020/9/7.
  */
-public class DragListViewActivity extends AppCompatActivity implements View.OnClickListener, DragListView.OnPositionChangerListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
-    private DragListView mDragListView;
+public class DragListViewActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+    private MyListView mDragListView;
     private ArrayList<Channel> mChannels;
     private DragListAdapter mAdapter;
 
@@ -45,9 +44,9 @@ public class DragListViewActivity extends AppCompatActivity implements View.OnCl
         }
         mAdapter.setItems(mChannels);
         mDragListView.setAdapter(mAdapter);
-        mDragListView.setOnPositionChangerListener(this);
         mDragListView.setOnItemClickListener(this);
         mDragListView.setOnItemLongClickListener(this);
+        mDragListView.setItems(mChannels);
     }
 
     private void unedited() {
@@ -62,24 +61,6 @@ public class DragListViewActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         unedited();
         Toast.makeText(this, "长按拖拽", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onChange(int fromPosition, int toPosition) {
-        if (fromPosition < 0 || toPosition < 0 || fromPosition >= mChannels.size() || toPosition >= mChannels.size()) {
-            return;
-        }
-        if (fromPosition > toPosition) {
-            for (int i = toPosition; i < fromPosition; i++) {
-                Collections.swap(mChannels, fromPosition, i);
-
-            }
-        } else if (fromPosition < toPosition) {
-            for (int i = toPosition; i > fromPosition; i--) {
-                Collections.swap(mChannels, fromPosition, i);
-            }
-        }
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
